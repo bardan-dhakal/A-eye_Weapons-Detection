@@ -8,7 +8,7 @@ import sys
 # --- CONFIGURATION ---
 # Make sure your .pt file is in the same folder as this script,
 # or update the path to point to where your file is.
-MODEL_PATH = 'model3_yolov5.pt' # Or whatever you named your downloaded model file
+MODEL_PATH = 'best3.pt' # Or whatever you named your downloaded model file
 
 def test_camera_access():
     """
