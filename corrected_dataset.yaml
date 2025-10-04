@@ -1,0 +1,6 @@
+path: C:\Users\barda\hackuta25\Weapons-Detection\guns-knives-yolo\guns-knives-yolo
+train: train/images
+val: valid/images
+
+nc: 2
+names: ["knife", "pistol"]
