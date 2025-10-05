@@ -74,7 +74,62 @@ class ScreenshotManager:
             'confidences': detection_info['confidences']
         })
         
+        # Check if we've reached the batch size (7 screenshots)
+        if len(self.pending_screenshots) >= SCREENSHOTS_PER_EVENT:
+            print(f"\n🎯 Reached {SCREENSHOTS_PER_EVENT} screenshots - processing event immediately...")
+            self.process_event_batch()
+        
         return filepath
+    
+    def process_event_batch(self):
+        """
+        Process the current batch of screenshots as one event.
+        """
+        if not self.pending_screenshots:
+            return
+        
+        # Create event ID based on current time
+        event_id = f"event_{int(time.time())}"
+        screenshot_paths = [item['filepath'] for item in self.pending_screenshots]
+        
+        # Calculate event duration
+        start_time = min(item['timestamp'] for item in self.pending_screenshots)
+        end_time = max(item['timestamp'] for item in self.pending_screenshots)
+        duration = (end_time - start_time).total_seconds()
+        
+        # Collect weapons detected
+        all_weapons = set()
+        for item in self.pending_screenshots:
+            all_weapons.update(item['weapons'])
+        
+        event_info = {
+            'duration': duration,
+            'weapons': list(all_weapons),
+            'start_time': start_time,
+            'end_time': end_time,
+            'screenshot_count': len(screenshot_paths)
+        }
+        
+        print(f"\n🔍 Processing Event Batch {event_id}")
+        print(f"   Screenshots: {len(screenshot_paths)}")
+        print(f"   Duration: {duration:.1f} seconds")
+        print(f"   Weapons: {', '.join(all_weapons)}")
+        
+        # Save event description with AI analysis
+        event_file, description_file = self.save_event_description(event_id, screenshot_paths, event_info)
+        
+        # Print summary
+        print(f"\n📋 Event Batch Summary:")
+        print(f"   Event ID: {event_id}")
+        print(f"   Screenshots: {len(screenshot_paths)}")
+        print(f"   Weapons: {', '.join(all_weapons)}")
+        if self.gemini_api.is_enabled():
+            print(f"   AI Analysis: ✅ Generated")
+        else:
+            print(f"   AI Analysis: ⚠️  Disabled (check API key)")
+        
+        # Clear pending screenshots after processing
+        self.pending_screenshots = []
     
     def save_event_description(self, event_id, screenshot_paths, event_info):
         """
@@ -155,7 +210,8 @@ class ScreenshotManager:
             'duration': duration,
             'weapons': list(all_weapons),
             'start_time': start_time,
-            'end_time': end_time
+            'end_time': end_time,
+            'screenshot_count': len(screenshot_paths)
         }
         
         print(f"\n🔍 Processing Event {event_id}")
@@ -163,18 +219,14 @@ class ScreenshotManager:
         print(f"   Duration: {duration:.1f} seconds")
         print(f"   Weapons: {', '.join(all_weapons)}")
         
-        # Save event description with AI analysis
-        event_file, description_file = self.save_event_description(event_id, screenshot_paths, event_info)
+        # Save event description - FIXED: Added self.
+        self.save_event_description(event_id, screenshot_paths, event_info)
         
         # Print summary
         print(f"\n📋 Event Summary:")
         print(f"   Event ID: {event_id}")
         print(f"   Screenshots: {len(screenshot_paths)}")
         print(f"   Weapons: {', '.join(all_weapons)}")
-        if self.gemini_api.is_enabled():
-            print(f"   AI Analysis: ✅ Generated")
-        else:
-            print(f"   AI Analysis: ⚠️  Disabled (check API key)")
     
     def process_pending_screenshots(self):
         """
