@@ -70,8 +70,16 @@ def generate_frames():
             time.sleep(0.01)
             continue
         
-        # Resize to very small size for maximum speed
-        small_frame = cv2.resize(frame, (240, 180))  # Even smaller resolution
+        # Resize to maintain proper aspect ratio based on camera resolution
+        # Calculate proportional size based on camera resolution
+        original_height, original_width = frame.shape[:2]
+        aspect_ratio = original_width / original_height
+        
+        # Target width for streaming (maintain aspect ratio)
+        target_width = 960  # Larger for better visibility
+        target_height = int(target_width / aspect_ratio)
+        
+        small_frame = cv2.resize(frame, (target_width, target_height))
         
         # Encode with very low quality for speed
         ret, buffer = cv2.imencode('.jpg', small_frame, [
@@ -171,7 +179,7 @@ def index():
             }
             img {
                 max-width: 100%;
-                max-height: 600px;
+                max-height: 80vh;
                 border: 3px solid #00ff00;
                 border-radius: 12px;
                 box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
