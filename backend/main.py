@@ -3,18 +3,21 @@
 
 import cv2
 import sys
+import time
+from threading import Thread
 from config import *
 from utils import setup_folders, get_camera, cleanup_camera
 from detection import WeaponDetector
 from screenshot_manager import ScreenshotManager
+from streaming_server import set_detector, update_streaming_frame, start_server
 
 
 def main():
     """
-    Main function to run the weapon detection system.
+    Main function to run the weapon detection system with streaming support.
     """
-    print("🔫 Weapons Detection System Starting...")
-    print("=" * 50)
+    print("🛡️ SentinelAI Weapons Detection System Starting...")
+    print("=" * 60)
     
     # Setup folders
     setup_folders()
@@ -35,13 +38,30 @@ def main():
     # Initialize camera
     cap = get_camera()
     
+    # Setup streaming server if enabled
+    streaming_thread = None
+    if STREAMING_ENABLED:
+        print("\n🌐 Setting up streaming server...")
+        set_detector(detector, screenshot_manager)
+        streaming_thread = Thread(target=start_server, daemon=True)
+        streaming_thread.start()
+        print("✅ Streaming server started in background")
+    
     print("\n✅ All components initialized successfully!")
     print(f"📁 Screenshots will be saved to: {SCREENSHOT_FOLDER}")
     print(f"🎯 Detection threshold: {CONFIDENCE_THRESHOLD}")
     print(f"⏱️  Min time between shots: {MIN_TIME_BETWEEN_SHOTS} seconds")
+    if STREAMING_ENABLED:
+        print(f"🌐 Web dashboard: http://{SERVER_HOST}:{SERVER_PORT}/")
     print("\n🎥 Starting detection...")
-    print("Press 'q' to quit, 'ESC' to exit")
-    print("-" * 50)
+    if not STREAMING_ENABLED:
+        print("Press 'q' to quit, 'ESC' to exit")
+    print("-" * 60)
+    
+    # Performance tracking
+    frame_count = 0
+    total_detections = 0
+    start_time = time.time()
     
     try:
         while True:
@@ -50,6 +70,8 @@ def main():
             if not ret:
                 print("❌ Failed to read frame from camera")
                 break
+            
+            frame_count += 1
             
             # Run detection
             results = detector.detect(frame)
@@ -65,15 +87,26 @@ def main():
                 
                 # Take screenshot if weapons detected
                 screenshot_manager.take_screenshot(frame, detection_info)
+                total_detections += 1
             
-            # Display frame
-            cv2.imshow(WINDOW_NAME, frame)
+            # Update streaming frame if streaming is enabled
+            if STREAMING_ENABLED:
+                elapsed = time.time() - start_time
+                fps = frame_count / elapsed if elapsed > 0 else 0
+                update_streaming_frame(frame, detection_info, fps, frame_count, total_detections)
             
-            # Check for exit
-            key = cv2.waitKey(1) & 0xFF
-            if key == ord('q') or key == ESC_KEY:
-                print("\n🛑 Exiting detection...")
-                break
+            # Display frame only if streaming is disabled
+            if not STREAMING_ENABLED:
+                cv2.imshow(WINDOW_NAME, frame)
+                
+                # Check for exit
+                key = cv2.waitKey(1) & 0xFF
+                if key == ord('q') or key == ESC_KEY:
+                    print("\n🛑 Exiting detection...")
+                    break
+            else:
+                # Small delay to prevent overwhelming CPU when streaming
+                time.sleep(0.01)
     
     except KeyboardInterrupt:
         print("\n🛑 Interrupted by user...")
@@ -89,6 +122,16 @@ def main():
         # Cleanup
         print("🧹 Cleaning up...")
         cleanup_camera(cap)
+        
+        # Print final statistics
+        if frame_count > 0:
+            elapsed = time.time() - start_time
+            avg_fps = frame_count / elapsed if elapsed > 0 else 0
+            print(f"\n📊 Final Statistics:")
+            print(f"   Total frames processed: {frame_count}")
+            print(f"   Total weapon detections: {total_detections}")
+            print(f"   Average FPS: {avg_fps:.2f}")
+            print(f"   Runtime: {elapsed:.2f} seconds")
         
         print("✅ System shutdown complete!")
 
