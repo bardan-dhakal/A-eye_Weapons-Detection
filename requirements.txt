@@ -1,0 +1,26 @@
+# Weapons Detection Model Testing Requirements
+# For model_test_v8.py and related scripts
+
+# Core YOLO and computer vision
+ultralytics>=8.0.0
+opencv-python>=4.5.0
+torch>=1.7.0
+torchvision>=0.8.0
+
+# Image processing and utilities
+Pillow>=8.0.0
+numpy>=1.19.0
+matplotlib>=3.3.0
+
+# Optional: For YOLOv5 support (if using model_test_v5.py)
+# yolov5>=7.0.0
+
+# Development and testing (optional)
+# pytest>=6.0.0
+# jupyter>=1.0.0
+
+# System utilities
+psutil>=5.8.0
+
+# Environment variable management
+python-dotenv>=0.19.0
