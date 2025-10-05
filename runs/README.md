@@ -230,4 +230,4 @@ for name, metrics in results.items():
 
 **Last Updated**: 2024  
 **Validation Runs**: 4  
-**Maintainer**: SentinelAI Team
+**Maintainer**: A-eye Team

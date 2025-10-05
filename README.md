@@ -1,4 +1,4 @@
-# 🛡️ SentinelAI - Advanced Weapon Detection System
+# 🛡️ A-eye - Advanced Weapon Detection System
 
 A comprehensive real-time weapon detection system using YOLOv8 with advanced streaming capabilities, AI analysis, and automated security alerts.
 
@@ -184,4 +184,4 @@ For issues and questions:
 
 ---
 
-**🛡️ SentinelAI - Advanced Weapon Detection & Security Monitoring**
+**🛡️ A-eye - Advanced Weapon Detection & Security Monitoring**

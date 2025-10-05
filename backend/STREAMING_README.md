@@ -1,4 +1,4 @@
-# 🛡️ SentinelAI Streaming Integration
+# 🛡️ A-eye Streaming Integration
 
 This document explains the streaming functionality that has been integrated into the main weapon detection system.
 
@@ -229,7 +229,7 @@ Example systemd service:
 
 ```ini
 [Unit]
-Description=SentinelAI Weapon Detection
+Description=A-eye Weapon Detection
 After=network.target
 
 [Service]
@@ -254,4 +254,4 @@ For issues or questions:
 
 ---
 
-**🛡️ SentinelAI - Advanced Weapon Detection with Real-time Streaming**
+**🛡️ A-eye - Advanced Weapon Detection with Real-time Streaming**

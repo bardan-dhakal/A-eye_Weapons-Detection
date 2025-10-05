@@ -1,4 +1,4 @@
-# 🤖 Models and Checkpoints
+gi# 🤖 Models and Checkpoints
 
 This directory contains trained YOLO models, checkpoints, and training utilities for weapon detection.
 
@@ -186,10 +186,10 @@ weight_decay: 0.0005
 
 ## 📄 License
 
-Models are trained using the SentinelAI dataset and are available for research and commercial use under the MIT License.
+Models are trained using the A-eye dataset and are available for research and commercial use under the MIT License.
 
 ---
 
 **Model Version**: 1.3  
 **Last Updated**: 2024  
-**Maintainer**: SentinelAI Team
+**Maintainer**: A-eye Team
