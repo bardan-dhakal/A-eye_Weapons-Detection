@@ -1,1 +1,43 @@
 backend/config.py
+# Dataset directories
+guns-knives-yolo/
+Weapons-Detection/guns-knives-yolo/
+
+# YOLO training outputs
+runs/
+Weapons-Detection/runs/
+Weapons-Detection/runs/detect/
+
+# Environment files (contains sensitive data)
+.env
+.env.local
+.env.production
+Weapons-Detection/backend/.env
+
+# Screenshot outputs (optional - uncomment if you don't want to track screenshots)
+# Weapons-Detection/backend/weapon_detections/
+
+# Model files (optional - uncomment if you don't want to track model files)
+# *.pt
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
