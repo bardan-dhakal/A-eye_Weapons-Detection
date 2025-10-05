@@ -1,0 +1,16 @@
+Security Event - event_1759642288
+==================================================
+
+Timestamp: 2025-10-05T00:31:45.649158
+Duration: 30.52336 seconds
+Screenshots: 7
+Weapons: pistol, knife
+
+AI Analysis (Gemini Vision):
+------------------------------
+Attention all units, we have a moderate threat level. We are tracking a single male subject, light-skinned with dark, disheveled hair, a beard, and glasses, wearing a blue checkered shirt. He's moving around an empty room, gesturing, but not currently displaying aggressive behavior.
+
+Automated systems indicate a pistol and a knife in the environment, however, the subject is not observed to be armed. The pistol detections are in the background near empty desks, and the knife detection is on an overhead light fixture. The location appears to be a classroom or lecture hall.
+
+The subject is the only individual visible; no other persons or victims are present. Officers should approach with caution due to the weapon detections. Maintain visual on the subject and assess the environment for actual threats upon arrival.
+

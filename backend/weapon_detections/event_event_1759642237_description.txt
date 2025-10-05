@@ -1,0 +1,16 @@
+Security Event - event_1759642237
+==================================================
+
+Timestamp: 2025-10-05T00:30:49.092784
+Duration: 25.381444 seconds
+Screenshots: 7
+Weapons: pistol, knife
+
+AI Analysis (Gemini Vision):
+------------------------------
+A high threat level has been detected. The suspect is a young adult male with glasses and a beard, wearing a light blue checkered button-up shirt. He is actively holding a knife and appears to be smiling.
+
+He is holding a silver kitchen-style knife, and a pistol is also detected on a table in the background. The location appears to be an indoor classroom or lecture hall, which currently shows no other occupants.
+
+The suspect is manipulating the knife, but no immediate aggressive actions towards others are observed. There are no visible victims or bystanders at this time. Officers should approach with extreme caution, secure the scene, and prioritize locating the detected pistol immediately.
+

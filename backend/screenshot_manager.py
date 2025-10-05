@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 from config import *
 from gemini_api import GeminiVisionAPI
 from elevenlabs_api import ElevenLabsTTS
+from twilio_api import TwilioVoiceCall
 
 
 class ScreenshotManager:
@@ -25,6 +26,7 @@ class ScreenshotManager:
         self.pending_screenshots = []
         self.gemini_api = GeminiVisionAPI()
         self.elevenlabs_api = ElevenLabsTTS()
+        self.twilio_api = TwilioVoiceCall()
         
     def can_take_screenshot(self):
         """
@@ -109,7 +111,8 @@ class ScreenshotManager:
             'weapons': list(all_weapons),
             'start_time': start_time,
             'end_time': end_time,
-            'screenshot_count': len(screenshot_paths)
+            'screenshot_count': len(screenshot_paths),
+            'timestamp': datetime.now().isoformat()
         }
         
         print(f"\n🔍 Processing Event Batch {event_id}")
@@ -127,6 +130,28 @@ class ScreenshotManager:
             audio_path = self.elevenlabs_api.generate_security_alert(ai_description, event_info, event_id)
             if audio_path:
                 print(f"🎵 Voice announcement saved: {os.path.basename(audio_path)}")
+                
+                # Make phone call with the audio
+                if self.twilio_api.is_enabled():
+                    print(f"\n📞 Making security alert call...")
+                    call_sid = self.twilio_api.make_security_call(audio_path, event_info)
+                    
+                    if call_sid:
+                        print(f"✅ Security call initiated successfully!")
+                        print(f"   Call SID: {call_sid}")
+                        
+                        # Also send SMS as backup
+                        print(f"\n📱 Sending backup SMS alert...")
+                        sms_sid = self.twilio_api.send_security_sms(event_info, audio_path)
+                        if sms_sid:
+                            print(f"✅ Backup SMS sent successfully!")
+                    else:
+                        print(f"❌ Security call failed - sending SMS alert instead...")
+                        sms_sid = self.twilio_api.send_security_sms(event_info, audio_path)
+                        if sms_sid:
+                            print(f"✅ SMS alert sent successfully!")
+                else:
+                    print(f"⚠️  Twilio not enabled - skipping phone call")
         
         # Print summary
         print(f"\n📋 Event Batch Summary:")
@@ -142,6 +167,11 @@ class ScreenshotManager:
             print(f"   Voice Announcement: {'✅ Generated' if audio_path else '⚠️  Failed'}")
         else:
             print(f"   Voice Announcement: ⚠️  Disabled (check API key)")
+        
+        if self.twilio_api.is_enabled():
+            print(f"   Phone Call: {'✅ Initiated' if audio_path else '⚠️  No audio to call'}")
+        else:
+            print(f"   Phone Call: ⚠️  Disabled (check API credentials)")
         
         # Clear pending screenshots after processing
         self.pending_screenshots = []

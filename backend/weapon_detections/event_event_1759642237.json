@@ -1,0 +1,20 @@
+{
+  "event_id": "event_1759642237",
+  "timestamp": "2025-10-05T00:30:49.092784",
+  "duration_seconds": 25.381444,
+  "screenshot_count": 7,
+  "weapons_detected": [
+    "pistol",
+    "knife"
+  ],
+  "screenshot_paths": [
+    "weapon_detections\\event_20251005_0030_shot_000_knife_20251005_003012_143.jpg",
+    "weapon_detections\\event_20251005_0030_shot_001_knife_20251005_003015_763.jpg",
+    "weapon_detections\\event_20251005_0030_shot_002_knife_20251005_003018_021.jpg",
+    "weapon_detections\\event_20251005_0030_shot_003_knife_20251005_003020_990.jpg",
+    "weapon_detections\\event_20251005_0030_shot_004_knife_20251005_003024_273.jpg",
+    "weapon_detections\\event_20251005_0030_shot_005_knife_20251005_003027_157.jpg",
+    "weapon_detections\\event_20251005_0030_shot_006_pistol_20251005_003037_525.jpg"
+  ],
+  "ai_analysis": "A high threat level has been detected. The suspect is a young adult male with glasses and a beard, wearing a light blue checkered button-up shirt. He is actively holding a knife and appears to be smiling.\n\nHe is holding a silver kitchen-style knife, and a pistol is also detected on a table in the background. The location appears to be an indoor classroom or lecture hall, which currently shows no other occupants.\n\nThe suspect is manipulating the knife, but no immediate aggressive actions towards others are observed. There are no visible victims or bystanders at this time. Officers should approach with extreme caution, secure the scene, and prioritize locating the detected pistol immediately."
+}
