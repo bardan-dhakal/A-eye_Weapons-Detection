@@ -15,7 +15,7 @@ def test_camera_access():
     """
     print("Testing camera access...")
     
-    # First try Raspberry Pi camera device if specified
+    # First try Raspberry Pi camera device if specified (Linux only)
     if CAMERA_DEVICE and CAMERA_DEVICE.startswith('/dev/video'):
         print(f"Testing Raspberry Pi camera: {CAMERA_DEVICE}")
         cap = cv2.VideoCapture(CAMERA_DEVICE)
@@ -27,6 +27,8 @@ def test_camera_access():
                 return CAMERA_DEVICE
             cap.release()
         print(f"✗ Raspberry Pi camera {CAMERA_DEVICE} is not accessible")
+    elif CAMERA_DEVICE is None:
+        print("No specific camera device set - will auto-detect from available indices")
     
     # Fall back to regular camera indices
     print("Testing regular camera indices...")
