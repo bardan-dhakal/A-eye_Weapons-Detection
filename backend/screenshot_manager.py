@@ -7,6 +7,7 @@ import json
 import time
 from datetime import datetime, timedelta
 from config import *
+from gemini_api import GeminiVisionAPI
 
 
 class ScreenshotManager:
@@ -21,6 +22,7 @@ class ScreenshotManager:
         self.screenshot_count = 0
         self.last_screenshot_time = None
         self.pending_screenshots = []
+        self.gemini_api = GeminiVisionAPI()
         
     def can_take_screenshot(self):
         """
@@ -76,15 +78,22 @@ class ScreenshotManager:
     
     def save_event_description(self, event_id, screenshot_paths, event_info):
         """
-        Save event metadata to file.
+        Save event metadata to file with AI analysis.
         """
+        # Get AI analysis from Gemini
+        ai_description = None
+        if self.gemini_api.is_enabled():
+            print(f"🤖 Getting AI analysis for event {event_id}...")
+            ai_description = self.gemini_api.analyze_event(screenshot_paths, event_info)
+        
         event_data = {
             "event_id": event_id,
             "timestamp": datetime.now().isoformat(),
             "duration_seconds": event_info.get('duration', 0),
             "screenshot_count": len(screenshot_paths),
             "weapons_detected": event_info.get('weapons', []),
-            "screenshot_paths": screenshot_paths
+            "screenshot_paths": screenshot_paths,
+            "ai_analysis": ai_description
         }
         
         # Save as JSON
@@ -101,13 +110,23 @@ class ScreenshotManager:
             f.write(f"Duration: {event_data['duration_seconds']} seconds\n")
             f.write(f"Screenshots: {event_data['screenshot_count']}\n")
             f.write(f"Weapons: {', '.join(event_data['weapons_detected'])}\n\n")
-            f.write("Event Summary:\n")
-            f.write("-" * 20 + "\n")
-            f.write(f"Weapon detection event with {event_data['screenshot_count']} screenshots.\n")
-            f.write(f"Weapons detected: {', '.join(event_data['weapons_detected'])}\n")
-            f.write(f"Event duration: {event_data['duration_seconds']} seconds\n")
+            
+            # Add AI analysis if available
+            if ai_description:
+                f.write("AI Analysis (Gemini Vision):\n")
+                f.write("-" * 30 + "\n")
+                f.write(ai_description)
+                f.write("\n\n")
+            else:
+                f.write("Event Summary:\n")
+                f.write("-" * 20 + "\n")
+                f.write(f"Weapon detection event with {event_data['screenshot_count']} screenshots.\n")
+                f.write(f"Weapons detected: {', '.join(event_data['weapons_detected'])}\n")
+                f.write(f"Event duration: {event_data['duration_seconds']} seconds\n")
         
         print(f"📝 Event description saved: {description_file}")
+        if ai_description:
+            print(f"🤖 AI analysis included in description")
         return event_file, description_file
     
     def process_event_group(self, event_group):
@@ -144,14 +163,18 @@ class ScreenshotManager:
         print(f"   Duration: {duration:.1f} seconds")
         print(f"   Weapons: {', '.join(all_weapons)}")
         
-        # Save event description
-        self.save_event_description(event_id, screenshot_paths, event_info)
+        # Save event description with AI analysis
+        event_file, description_file = self.save_event_description(event_id, screenshot_paths, event_info)
         
         # Print summary
         print(f"\n📋 Event Summary:")
         print(f"   Event ID: {event_id}")
         print(f"   Screenshots: {len(screenshot_paths)}")
         print(f"   Weapons: {', '.join(all_weapons)}")
+        if self.gemini_api.is_enabled():
+            print(f"   AI Analysis: ✅ Generated")
+        else:
+            print(f"   AI Analysis: ⚠️  Disabled (check API key)")
     
     def process_pending_screenshots(self):
         """

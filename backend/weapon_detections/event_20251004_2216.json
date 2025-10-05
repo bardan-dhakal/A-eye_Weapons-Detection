@@ -1,0 +1,22 @@
+{
+  "event_id": "20251004_2216",
+  "timestamp": "2025-10-04T22:17:22.502160",
+  "duration_seconds": 20.868313,
+  "screenshot_count": 9,
+  "weapons_detected": [
+    "pistol",
+    "knife"
+  ],
+  "screenshot_paths": [
+    "weapon_detections\\event_20251004_2216_shot_000_pistol_20251004_221629_930.jpg",
+    "weapon_detections\\event_20251004_2216_shot_001_knife_20251004_221633_249.jpg",
+    "weapon_detections\\event_20251004_2216_shot_002_knife_20251004_221637_940.jpg",
+    "weapon_detections\\event_20251004_2216_shot_003_knife_20251004_221639_979.jpg",
+    "weapon_detections\\event_20251004_2216_shot_004_knife_20251004_221642_064.jpg",
+    "weapon_detections\\event_20251004_2216_shot_005_knife_20251004_221644_272.jpg",
+    "weapon_detections\\event_20251004_2216_shot_006_knife_20251004_221646_430.jpg",
+    "weapon_detections\\event_20251004_2216_shot_007_knife_20251004_221648_770.jpg",
+    "weapon_detections\\event_20251004_2216_shot_008_knife_20251004_221650_798.jpg"
+  ],
+  "ai_analysis": "**IMMEDIATE THREAT ASSESSMENT**\nCRITICAL\n- An agitated individual is actively brandishing a knife, posing an immediate threat of violence.\n\n**SUSPECT DESCRIPTION**\n- Number of individuals visible: One.\n- Physical descriptions: Male, light-to-medium skin tone, dark hair, beard, glasses, wearing a light blue/white checkered button-down shirt. Appears to be an adult, likely 20s-30s, average build.\n- Current actions and behavior: Appears agitated, with an open-mouthed expression (possibly yelling or shouting) in multiple images. He is actively wielding a knife in a threatening manner, at times extending it towards the camera.\n- Direction of movement or position: Stationary, facing the camera.\n\n**WEAPON DETAILS**\n- Type of weapon(s) visible: One knife. (Note: The \"pistol\" detection in Image 1 appears to be a false positive; no firearm is visible.)\n- Weapon status: Knife is drawn, held in the suspect's right hand. It is raised and pointed in various directions, including towards the camera and his own mouth.\n- Which hand holding weapon: Right hand.\n- Any visible modifications or identifying features: Small to medium-sized utility or folding knife, with a dark handle and a silver blade.\n\n**LOCATION & ENVIRONMENT**\n- Indoor/outdoor setting: Indoor.\n- Type of location: Appears to be a classroom or lecture hall, indicated by visible auditorium-style seating and ceiling tiles.\n- Number of potential victims/bystanders visible: None visible in the camera frame, but the location suggests potential for others.\n- Entry/exit points visible: None explicitly visible within the camera frame.\n- Cover and concealment available: Seating rows may offer limited cover.\n\n**TIMELINE & PROGRESSION**\n- What happened first, next, and currently: The event began with the suspect holding his head (Image 1-2), then he produced and began actively brandishing a knife (Image 3). He subsequently escalated his actions by holding the knife aggressively, pointing it towards his mouth and extending it towards the camera (Images 4-9), all while maintaining an agitated expression.\n- Any escalation or de-escalation observed: Clear escalation from a non-threatening posture to aggressive brandishing of a weapon.\n- Movement patterns through the scene: Suspect remains stationary throughout the captured event.\n\n**CRITICAL INFORMATION FOR RESPONSE**\n- Immediate dangers to responding officers: Suspect is armed with a knife, displaying agitated and aggressive behavior. He may pose an immediate threat of attack if approached closely.\n- Potential hostages or victims: None visible in the footage, but the classroom setting means potential for students or staff to be present or enter the area.\n- Recommended approach strategy: Exercise extreme caution. Maintain a safe distance. Utilize verbal de-escalation techniques if feasible and safe. Be prepared to use less-lethal force options immediately upon contact.\n- Any time-sensitive factors: The suspect's agitated state and active brandishing of the knife indicate an immediate and evolving threat. Rapid response is crucial to prevent potential harm."
+}
