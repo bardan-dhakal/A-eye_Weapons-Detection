@@ -1,12 +1,8 @@
 backend/config.py
 # Dataset directories
-guns-knives-yolo/
-Weapons-Detection/guns-knives-yolo/
 
-# YOLO training outputs
-runs/
-Weapons-Detection/runs/
-Weapons-Detection/runs/detect/
+
+
 
 # Environment files (contains sensitive data)
 .env
