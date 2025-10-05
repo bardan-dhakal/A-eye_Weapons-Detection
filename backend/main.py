@@ -62,6 +62,8 @@ def main():
     frame_count = 0
     total_detections = 0
     start_time = time.time()
+    frame_skip_counter = 0  # For detection frame skipping
+    stream_skip_counter = 0  # For streaming frame skipping
     
     try:
         while True:
@@ -73,27 +75,38 @@ def main():
             
             frame_count += 1
             
-            # Run detection
-            results = detector.detect(frame)
-            if results is None:
-                continue
-            
-            # Check for weapon detections
-            detection_info = detector.check_weapon_detection(results)
-            
-            # Draw detections on frame
-            if detection_info:
-                frame = detector.draw_detections(frame, detection_info)
-                
-                # Take screenshot if weapons detected
-                screenshot_manager.take_screenshot(frame, detection_info)
-                total_detections += 1
-            
-            # Update streaming frame if streaming is enabled
+            # Update streaming frame with additional skipping for performance
             if STREAMING_ENABLED:
-                elapsed = time.time() - start_time
-                fps = frame_count / elapsed if elapsed > 0 else 0
-                update_streaming_frame(frame, detection_info, fps, frame_count, total_detections)
+                stream_skip_counter += 1
+                if stream_skip_counter > STREAMING_SKIP_FRAMES:
+                    stream_skip_counter = 0
+                    elapsed = time.time() - start_time
+                    fps = frame_count / elapsed if elapsed > 0 else 0
+                    # Send raw frame first (no detection overlay for maximum speed)
+                    update_streaming_frame(frame, None, fps, frame_count, total_detections)
+            
+            # Skip detection on some frames for better performance
+            frame_skip_counter += 1
+            if frame_skip_counter >= DETECTION_SKIP_FRAMES:
+                frame_skip_counter = 0
+                
+                # Run detection only every few frames
+                results = detector.detect(frame)
+                if results is not None:
+                    # Check for weapon detections
+                    detection_info = detector.check_weapon_detection(results)
+                    
+                    # Draw detections on frame
+                    if detection_info:
+                        frame_with_detections = detector.draw_detections(frame, detection_info)
+                        
+                        # Take screenshot if weapons detected
+                        screenshot_manager.take_screenshot(frame_with_detections, detection_info)
+                        total_detections += 1
+                        
+                        # Update streaming with detection overlay (optional)
+                        if STREAMING_ENABLED:
+                            update_streaming_frame(frame_with_detections, detection_info, fps, frame_count, total_detections)
             
             # Display frame only if streaming is disabled
             if not STREAMING_ENABLED:
@@ -127,10 +140,14 @@ def main():
         if frame_count > 0:
             elapsed = time.time() - start_time
             avg_fps = frame_count / elapsed if elapsed > 0 else 0
+            detection_fps = (frame_count // (DETECTION_SKIP_FRAMES + 1)) / elapsed if elapsed > 0 else 0
             print(f"\n📊 Final Statistics:")
             print(f"   Total frames processed: {frame_count}")
             print(f"   Total weapon detections: {total_detections}")
             print(f"   Average FPS: {avg_fps:.2f}")
+            print(f"   Detection FPS: {detection_fps:.2f}")
+            print(f"   Stream max FPS: {STREAM_MAX_FPS}")
+            print(f"   Detection skip frames: {DETECTION_SKIP_FRAMES}")
             print(f"   Runtime: {elapsed:.2f} seconds")
         
         print("✅ System shutdown complete!")

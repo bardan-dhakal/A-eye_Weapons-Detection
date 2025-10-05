@@ -39,31 +39,69 @@ def set_detector(detector_instance, screenshot_manager_instance):
     screenshot_manager = screenshot_manager_instance
 
 def generate_frames():
-    """Generator function for video streaming"""
+    """Ultra-optimized generator function for video streaming"""
+    last_frame_time = 0
+    frame_interval = 1.0 / STREAM_MAX_FPS
+    skip_counter = 0
+    
     while True:
-        with frame_lock:
-            if current_frame is None:
-                continue
-            frame = current_frame.copy()
+        current_time = time.time()
         
-        # Encode frame as JPEG
-        ret, buffer = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, STREAM_QUALITY])
+        # Skip frames if updating too frequently
+        if current_time - last_frame_time < frame_interval:
+            time.sleep(0.005)  # Longer sleep to reduce CPU usage
+            continue
+        
+        # Additional frame skipping for streaming
+        skip_counter += 1
+        if skip_counter <= STREAMING_SKIP_FRAMES:
+            continue
+        skip_counter = 0
+            
+        # Try to get frame without blocking
+        try:
+            with frame_lock:
+                if current_frame is None:
+                    time.sleep(0.02)
+                    continue
+                # Use reference instead of copy for speed
+                frame = current_frame
+        except:
+            time.sleep(0.01)
+            continue
+        
+        # Resize to very small size for maximum speed
+        small_frame = cv2.resize(frame, (240, 180))  # Even smaller resolution
+        
+        # Encode with very low quality for speed
+        ret, buffer = cv2.imencode('.jpg', small_frame, [
+            cv2.IMWRITE_JPEG_QUALITY, 40,  # Very low quality
+            cv2.IMWRITE_JPEG_OPTIMIZE, 1,
+            cv2.IMWRITE_JPEG_PROGRESSIVE, 1
+        ])
         
         if not ret:
             continue
         
         frame_bytes = buffer.tobytes()
         
-        # Yield frame in multipart format
+        # Yield frame
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+        
+        last_frame_time = current_time
 
 def update_streaming_frame(frame, detection_info, fps, frame_count, total_detections):
     """Update the current frame and detection data for streaming"""
     global current_frame, detection_data
     
-    with frame_lock:
-        current_frame = frame.copy()
+    # Only update if we don't already have a frame or if enough time has passed
+    try:
+        with frame_lock:
+            # Use reference instead of copy for speed - be careful with this!
+            current_frame = frame
+    except:
+        pass  # Skip if lock fails
     
     # Prepare detection data
     threats = []
