@@ -107,49 +107,32 @@ class GeminiVisionAPI:
         screenshot_count = event_info.get('screenshot_count', 0)
         
         prompt = f"""
-You are analyzing security camera footage for first responders. Provide a clear, actionable incident report.
+You are providing a brief tactical audio briefing for first responders responding to an active threat.
 
-DETECTED EVENT DATA:
-- Weapon types detected by AI: {', '.join(weapons) if weapons else 'Unknown'}
-- Event duration: {duration:.1f} seconds
-- Screenshots captured: {screenshot_count}
+DETECTED EVENT:
+- Weapons: {', '.join(weapons) if weapons else 'Unknown'}
+- Duration: {duration:.1f} seconds
+- Images: {screenshot_count}
 
-Provide a FIRST RESPONDER BRIEFING in this exact format:
+Provide a concise verbal briefing in 3-4 short paragraphs that flows naturally when read aloud. Use this structure:
 
-**IMMEDIATE THREAT ASSESSMENT**
-[Rate as: CRITICAL / HIGH / MODERATE / LOW]
-- Explain threat level reasoning in 1-2 sentences
+Paragraph 1 - THREAT LEVEL & SUSPECT:
+Start with threat level (critical, high, moderate, or low), then briefly describe the suspect's appearance, clothing, and current actions.
 
-**SUSPECT DESCRIPTION**
-- Number of individuals visible
-- Physical descriptions (clothing color, build, approximate age if visible)
-- Current actions and behavior
-- Direction of movement or position
+Paragraph 2 - WEAPON & LOCATION:
+Describe the weapon type and how it's being held, then the location type and environment.
 
-**WEAPON DETAILS**
-- Type of weapon(s) visible (firearm type, knife, etc.)
-- Weapon status (drawn/holstered, raised/lowered, pointed at anyone)
-- Which hand holding weapon
-- Any visible modifications or identifying features
+Paragraph 3 - SITUATION & RESPONSE:
+Describe what's happening, any visible victims or bystanders, and key tactical considerations for responding officers.
 
-**LOCATION & ENVIRONMENT**
-- Indoor/outdoor setting
-- Type of location (school, office, store, parking lot, etc.)
-- Number of potential victims/bystanders visible
-- Entry/exit points visible
-- Cover and concealment available
+CRITICAL RULES:
+- Write in short, clear sentences that flow when spoken
+- NO bullet points, NO headers, NO special formatting
+- Maximum 150 words total
+- Use natural, conversational language
+- Focus only on what officers need to hear immediately
+- Omit anything you cannot clearly see in the images
 
-**TIMELINE & PROGRESSION**
-- What happened first, next, and currently
-- Any escalation or de-escalation observed
-- Movement patterns through the scene
-
-**CRITICAL INFORMATION FOR RESPONSE**
-- Immediate dangers to responding officers
-- Potential hostages or victims
-- Recommended approach strategy
-- Any time-sensitive factors
-
-Keep descriptions clear, concise, and focused on tactical response needs. Use precise language that officers can act on immediately.
+Write as if you're speaking directly to officers en route to the scene.
 """
         return prompt

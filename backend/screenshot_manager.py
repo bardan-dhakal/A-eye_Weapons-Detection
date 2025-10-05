@@ -8,6 +8,7 @@ import time
 from datetime import datetime, timedelta
 from config import *
 from gemini_api import GeminiVisionAPI
+from elevenlabs_api import ElevenLabsTTS
 
 
 class ScreenshotManager:
@@ -23,6 +24,7 @@ class ScreenshotManager:
         self.last_screenshot_time = None
         self.pending_screenshots = []
         self.gemini_api = GeminiVisionAPI()
+        self.elevenlabs_api = ElevenLabsTTS()
         
     def can_take_screenshot(self):
         """
@@ -116,7 +118,15 @@ class ScreenshotManager:
         print(f"   Weapons: {', '.join(all_weapons)}")
         
         # Save event description with AI analysis
-        event_file, description_file = self.save_event_description(event_id, screenshot_paths, event_info)
+        event_file, description_file, ai_description = self.save_event_description(event_id, screenshot_paths, event_info)
+        
+        # Generate voice announcement if AI description is available
+        audio_path = None
+        if ai_description and self.elevenlabs_api.is_enabled():
+            print(f"\n🔊 Generating voice announcement for event {event_id}...")
+            audio_path = self.elevenlabs_api.generate_security_alert(ai_description, event_info, event_id)
+            if audio_path:
+                print(f"🎵 Voice announcement saved: {os.path.basename(audio_path)}")
         
         # Print summary
         print(f"\n📋 Event Batch Summary:")
@@ -127,6 +137,11 @@ class ScreenshotManager:
             print(f"   AI Analysis: ✅ Generated")
         else:
             print(f"   AI Analysis: ⚠️  Disabled (check API key)")
+        
+        if self.elevenlabs_api.is_enabled():
+            print(f"   Voice Announcement: {'✅ Generated' if audio_path else '⚠️  Failed'}")
+        else:
+            print(f"   Voice Announcement: ⚠️  Disabled (check API key)")
         
         # Clear pending screenshots after processing
         self.pending_screenshots = []
@@ -182,7 +197,8 @@ class ScreenshotManager:
         print(f"📝 Event description saved: {description_file}")
         if ai_description:
             print(f"🤖 AI analysis included in description")
-        return event_file, description_file
+        
+        return event_file, description_file, ai_description
     
     def process_event_group(self, event_group):
         """
